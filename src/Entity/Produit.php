@@ -36,7 +36,7 @@ class Produit
     /**
      * @var Collection<int, LigneCommande>
      */
-    #[ORM\OneToMany(targetEntity: LigneCommande::class, mappedBy: 'Produit')]
+    #[ORM\OneToMany(targetEntity: LigneCommande::class, mappedBy: 'produit')]
     private Collection $ligneCommandes;
 
     public function __construct()
@@ -150,4 +150,6 @@ class Produit
 
         return $this;
     }
+
+    
 }

@@ -15,16 +15,16 @@ class LigneCommande
 
     #[ORM\ManyToOne(inversedBy: 'ligneCommandes')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
+    private ?Commande $commande = null;
 
     #[ORM\ManyToOne(inversedBy: 'ligneCommandes')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Produit $Produit = null;
+    private ?Produit $produit = null;
 
     #[ORM\Column]
     private ?int $quantite = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column]
     private ?float $prix = null;
 
     public function getId(): ?int
@@ -32,26 +32,26 @@ class LigneCommande
         return $this->id;
     }
 
-    public function getUser(): ?User
+    public function getCommande(): ?Commande
     {
-        return $this->user;
+        return $this->commande;
     }
 
-    public function setUser(?User $user): static
+    public function setCommande(?Commande $commande): static
     {
-        $this->user = $user;
+        $this->commande = $commande;
 
         return $this;
     }
 
     public function getProduit(): ?Produit
     {
-        return $this->Produit;
+        return $this->produit;
     }
 
-    public function setProduit(?Produit $Produit): static
+    public function setProduit(?Produit $produit): static
     {
-        $this->Produit = $Produit;
+        $this->produit = $produit;
 
         return $this;
     }
@@ -73,7 +73,7 @@ class LigneCommande
         return $this->prix;
     }
 
-    public function setPrix(?float $prix): static
+    public function setPrix(float $prix): static
     {
         $this->prix = $prix;
 
