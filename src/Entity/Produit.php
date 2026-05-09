@@ -6,6 +6,8 @@ use App\Repository\ProduitRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 class Produit
@@ -29,6 +31,13 @@ class Produit
 
     #[ORM\Column]
     private ?int $stock = null;
+
+    #[ORM\Column(options: ['default' => false])]
+    private ?bool $isPromo = false;
+
+    #[ORM\Column(nullable: true)]
+    #[Assert\Range(min: 0, max: 100)]
+    private ?int $promoDiscount = null;
 
     #[ORM\ManyToOne(inversedBy: 'produits')]
     private ?Categorie $categorie = null;
@@ -107,6 +116,48 @@ class Produit
         $this->stock = $stock;
 
         return $this;
+    }
+
+    public function isPromo(): ?bool
+    {
+        return $this->isPromo;
+    }
+
+    public function setIsPromo(bool $isPromo): static
+    {
+        $this->isPromo = $isPromo;
+
+        return $this;
+    }
+
+    public function getPromoDiscount(): ?int
+    {
+        return $this->promoDiscount;
+    }
+
+    public function setPromoDiscount(?int $promoDiscount): static
+    {
+        $this->promoDiscount = $promoDiscount;
+
+        return $this;
+    }
+
+    #[Assert\Callback]
+    public function validatePromoDiscount(ExecutionContextInterface $context): void
+    {
+        if ($this->isPromo && $this->promoDiscount === null) {
+            $context->buildViolation('La remise est obligatoire pour une promotion.')
+                ->atPath('promoDiscount')
+                ->addViolation();
+        }
+
+        if ($this->isPromo && $this->promoDiscount !== null) {
+            if ($this->promoDiscount < 1 || $this->promoDiscount > 100) {
+                $context->buildViolation('La remise doit être entre 1 et 100%.')
+                    ->atPath('promoDiscount')
+                    ->addViolation();
+            }
+        }
     }
 
     public function getCategorie(): ?Categorie

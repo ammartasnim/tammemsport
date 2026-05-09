@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Commandes{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1 class="mb-4">Mes Commandes</h1>
+
+    {% if orders is empty %}
+        <div class="alert alert-info">Vous n'avez pas encore de commandes.</div>
+        <a href="{{ path('app_product_catalog') }}" class="btn btn-primary">Retour au catalogue</a>
+    {% else %}
+        <div class="accordion" id="ordersAccordion">
+            {% for order in orders %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{ order.id }}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ order.id }}" aria-expanded="false" aria-controls="collapse{{ order.id }}">
+                            Commande #{{ order.id }} — {{ order.date|date('d/m/Y') }} — {{ order.total }} DT
+                        </button>
+                    </h2>
+                    <div id="collapse{{ order.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ order.id }}" data-bs-parent="#ordersAccordion">
+                        <div class="accordion-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Produit</th>
+                                        <th>Prix</th>
+                                        <th>Quantité</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for line in order.ligneCommandes %}
+                                        <tr>
+                                            <td>{{ line.produit.nom }}</td>
+                                            <td>{{ line.prix }} DT</td>
+                                            <td>{{ line.quantite }}</td>
+                                            <td>{{ line.prix * line.quantite }} DT</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

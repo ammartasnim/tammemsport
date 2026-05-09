@@ -8,10 +8,24 @@
     <h1 class="mb-4">Catalogue de Produits</h1>
 
     <form action="{{ path('app_product_catalog') }}" method="get" class="mb-4">
-    <div class="input-group">
-        <input type="text" name="q" class="form-control" placeholder="Rechercher un produit (ex: Haltères)..." value="{{ app.request.query.get('q') }}">
-        <button class="btn btn-primary" type="submit">Rechercher</button>
-    </div>
+        <div class="row g-2">
+            <div class="col-md-6">
+                <input type="text" name="q" class="form-control" placeholder="Rechercher un produit (ex: Haltères)..." value="{{ searchTerm }}">
+            </div>
+            <div class="col-md-4">
+                <select name="category" class="form-select">
+                    <option value="">Toutes les catégories</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}" {{ category.id == selectedCategory ? 'selected' : '' }}>
+                            {{ category.libelle }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2 d-grid">
+                <button class="btn btn-primary" type="submit">Filtrer</button>
+            </div>
+        </div>
     </form>
 
     <div class="row">

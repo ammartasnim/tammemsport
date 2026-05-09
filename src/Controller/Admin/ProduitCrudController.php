@@ -11,6 +11,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 
 class ProduitCrudController extends AbstractCrudController
 {
@@ -29,6 +30,8 @@ class ProduitCrudController extends AbstractCrudController
             NumberField::new('prix'),
             IntegerField::new('stock'),
             AssociationField::new('categorie', 'Category'),
+            BooleanField::new('isPromo', 'Promo'),
+            IntegerField::new('promoDiscount', 'Remise (%)')->setRequired(false),
             ImageField::new('image')
                 ->setBasePath('uploads/images/')
                 ->setUploadDir('public/uploads/images/')

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Compte{% endblock %}
+
+{% block body %}
+<div class="container mt-4" style="max-width: 720px;">
+    <h1 class="mb-4">Mon Compte</h1>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">Informations du profil</h5>
+            <dl class="row mb-0">
+                <dt class="col-sm-4">Nom</dt>
+                <dd class="col-sm-8">{{ user.nom }}</dd>
+
+                <dt class="col-sm-4">Email</dt>
+                <dd class="col-sm-8">{{ user.email }}</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{{ path('app_orders') }}" class="btn btn-primary">Voir mes commandes</a>
+    </div>
+</div>
+{% endblock %}

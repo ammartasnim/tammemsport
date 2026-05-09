@@ -25,6 +25,43 @@ class ProduitRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findByFilters(?string $term, ?int $categoryId): array
+    {
+        $qb = $this->createQueryBuilder('p');
+
+        if ($term) {
+            $qb->andWhere('p.nom LIKE :term')
+                ->setParameter('term', '%' . $term . '%');
+        }
+
+        if ($categoryId) {
+            $qb->andWhere('p.categorie = :categoryId')
+                ->setParameter('categoryId', $categoryId);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findPromos(int $limit = 6): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.isPromo = :isPromo')
+            ->setParameter('isPromo', true)
+            ->orderBy('p.id', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findLatest(int $limit = 6): array
+    {
+        return $this->createQueryBuilder('p')
+            ->orderBy('p.id', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Produit[] Returns an array of Produit objects
     //     */

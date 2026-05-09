@@ -12,6 +12,35 @@
         {% endblock %}
     </head>
     <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <a class="navbar-brand" href="{{ path('home') }}">SportShop</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="{{ path('home') }}">Accueil</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_product_catalog') }}">Catalogue</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_contact') }}">Contact</a></li>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li class="nav-item"><a class="nav-link" href="{{ path('admin') }}">Admin</a></li>
+                        {% endif %}
+                    </ul>
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_cart') }}">Panier</a></li>
+                        {% if app.user %}
+                            <li class="nav-item"><a class="nav-link" href="{{ path('app_account') }}">Profil</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ path('app_orders') }}">Commandes</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a></li>
+                        {% else %}
+                            <li class="nav-item"><a class="nav-link" href="{{ path('app_login') }}">Connexion</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ path('app_register') }}">Inscription</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
         {% block body %}{% endblock %}
     </body>
 </html>
