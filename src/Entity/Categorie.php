@@ -21,7 +21,7 @@ class Categorie
     /**
      * @var Collection<int, Produit>
      */
-    #[ORM\OneToMany(targetEntity: Produit::class, mappedBy: 'category')]
+    #[ORM\OneToMany(targetEntity: Produit::class, mappedBy: 'categorie')]
     private Collection $produits;
 
     public function __construct()
@@ -58,7 +58,7 @@ class Categorie
     {
         if (!$this->produits->contains($produit)) {
             $this->produits->add($produit);
-            $produit->setCategory($this);
+            $produit->setCategorie($this);
         }
 
         return $this;
@@ -68,11 +68,13 @@ class Categorie
     {
         if ($this->produits->removeElement($produit)) {
             // set the owning side to null (unless already changed)
-            if ($produit->getCategory() === $this) {
-                $produit->setCategory(null);
+            if ($produit->getCategorie() === $this) {
+                $produit->setCategorie(null);
             }
         }
 
         return $this;
     }
+    public function __toString(): string{
+    return $this->libelle;}
 }
