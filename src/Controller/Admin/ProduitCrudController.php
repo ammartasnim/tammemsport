@@ -26,7 +26,14 @@ class ProduitCrudController extends AbstractCrudController
         return [
             IdField::new('id')->hideOnForm(),
             TextField::new('nom'),
-            TextEditorField::new('description'),
+            TextEditorField::new('description')
+                ->formatValue(static function ($value) {
+                    if ($value === null) {
+                        return '';
+                    }
+                    $clean = str_replace('&nbsp;', ' ', (string) $value);
+                    return strip_tags($clean);
+                }),
             NumberField::new('prix'),
             IntegerField::new('stock'),
             AssociationField::new('categorie', 'Category'),

@@ -1,0 +1,31 @@
+{% if cart|length > 0 %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-muted small" data-cart-count="{{ cartCount ?? 0 }}">Articles: {{ cartCount ?? 0 }}</span>
+        <span class="badge text-bg-success">Total: {{ total }} DT</span>
+    </div>
+    <div class="list-group list-group-flush">
+        {% for item in cart %}
+            <div class="list-group-item d-flex align-items-start gap-2">
+                <div class="flex-grow-1">
+                    <div class="fw-semibold">{{ item.produit.nom }}</div>
+                    <div class="text-muted small">{{ item.quantity }} x {{ item.produit.prix }} DT</div>
+                    <div class="small">Total: {{ item.produit.prix * item.quantity }} DT</div>
+                </div>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Panier actions">
+                    <a href="{{ path('app_cart_add', {id: item.produit.id}) }}" class="btn btn-outline-success" data-cart-action data-turbo="false">+</a>
+                    <a href="{{ path('app_cart_remove', {id: item.produit.id}) }}" class="btn btn-outline-warning" data-cart-action data-turbo="false">-</a>
+                    <a href="{{ path('app_cart_delete', {id: item.produit.id}) }}" class="btn btn-outline-danger" data-cart-action data-turbo="false">Supprimer</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="border-top pt-3 mt-3">
+        <div class="d-grid gap-2">
+            <a href="{{ path('app_cart_checkout') }}" class="btn btn-success">Passer a la caisse</a>
+            <a href="{{ path('app_cart_empty') }}" class="btn btn-outline-danger" data-cart-action data-turbo="false">Vider le panier</a>
+        </div>
+    </div>
+{% else %}
+    <div class="alert alert-info mb-0" data-cart-count="0">Votre panier est vide.</div>
+{% endif %}

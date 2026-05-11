@@ -13,7 +13,7 @@
         {# Image #}
         <div class="col-md-5">
             {% if produit.image %}
-                <img src="{{ asset('uploads/images/' ~ produit.image) }}" class="img-fluid rounded" style="height: 150px; object-fit: cover; alt="{{ produit.nom }}">
+                <img src="{{ asset('uploads/images/' ~ produit.image) }}" class="img-fluid rounded" alt="{{ produit.nom }}" style="height: 150px; object-fit: cover;">
             {% else %}
                 <div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="height: 350px;">
                     <span class="text-white fs-4">Pas d'image</span>
@@ -39,7 +39,7 @@
 
             {% if produit.stock > 0 %}
                 {% if is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('app_cart_add', {id: produit.id}) }}" class="btn btn-success">
+                    <a href="{{ path('app_cart_add', {id: produit.id}) }}" class="btn btn-success" data-add-to-cart>
                         🛒 Ajouter au panier
                     </a>
                 {% else %}

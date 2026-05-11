@@ -51,11 +51,17 @@
                         </span>
                     </div>
                     <a href="{{ path('app_product_details', {id: produit.id}) }}" class="btn btn-primary mt-3">
-                        Voir détails
+                        Voir details
                     </a>
-                    <a href="{{ path('app_cart_add', {id: produit.id}) }}" class="btn btn-success">
-                        🛒 Ajouter au panier
-                    </a>
+                    {% if is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('app_cart_add', {id: produit.id}) }}" class="btn btn-success" data-add-to-cart>
+                            🛒 Ajouter au panier
+                        </a>
+                    {% else %}
+                        <a href="{{ path('app_login') }}" class="btn btn-outline-success">
+                            Connectez-vous pour acheter
+                        </a>
+                    {% endif %}
                 </div>
             </div>
         </div>
