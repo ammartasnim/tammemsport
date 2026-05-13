@@ -1,1 +1,46 @@
-{% extends "@EasyAdmin/page/content.html.twig"%}
+{% extends "@EasyAdmin/page/content.html.twig" %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row g-3 mb-4">
+            <div class="col-12 col-md-6 col-xl-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="text-muted">Total users</div>
+                        <div class="h3 mb-0">{{ totalUsers }}</div>
+                        <div class="small text-muted">New last 30 days: {{ newUsers }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xl-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="text-muted">Total orders</div>
+                        <div class="h3 mb-0">{{ totalOrders }}</div>
+                        <div class="small text-muted">Last 30 days: {{ ordersLast30Days }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xl-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="text-muted">Total revenue</div>
+                        <div class="h3 mb-0">{{ totalRevenue|number_format(2, '.', ' ') }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xl-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="text-muted">Total products</div>
+                        <div class="h3 mb-0">{{ totalProducts }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-2">
+            <a class="btn btn-primary" href="{{ path('admin_export_monthly_report') }}">Export monthly report (CSV)</a>
+        </div>
+    </div>
+{% endblock %}
