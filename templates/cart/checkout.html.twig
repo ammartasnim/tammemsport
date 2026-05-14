@@ -1,59 +1,95 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Passer commande{% endblock %}
+{% block title %}Commander | Performance Store{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <h1 class="mb-4">Passer commande</h1>
+<div class="min-h-screen bg-slate-50 py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
-    {% for message in app.flashes('warning') %}
-        <div class="alert alert-warning">{{ message }}</div>
-    {% endfor %}
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success">{{ message }}</div>
-    {% endfor %}
-
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <h5 class="card-title mb-3">Recapitulatif du panier</h5>
-
-            {% if cart|length > 0 %}
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Produit</th>
-                            <th>Prix</th>
-                            <th>Quantite</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in cart %}
-                            <tr>
-                                <td>{{ item.produit.nom }}</td>
-                                <td>{{ item.produit.prix }} DT</td>
-                                <td>{{ item.quantity }}</td>
-                                <td>{{ item.produit.prix * item.quantity }} DT</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="3" class="text-end fw-semibold">Total a payer</td>
-                            <td class="fw-bold text-success">{{ total }} DT</td>
-                        </tr>
-                    </tfoot>
-                </table>
-
-                <form method="post" action="{{ path('app_cart_checkout_confirm') }}">
-                    <button type="submit" class="btn btn-success">Confirmer la commande</button>
-                    <a href="{{ path('app_product_catalog') }}" class="btn btn-outline-secondary">Continuer mes achats</a>
-                </form>
-            {% else %}
-                <div class="alert alert-info">Votre panier est vide.</div>
-                <a href="{{ path('app_product_catalog') }}" class="btn btn-primary">Retour au catalogue</a>
-            {% endif %}
+        <div class="mb-10">
+            <h1 class="text-4xl font-black italic tracking-tighter text-slate-900 uppercase">Passer <span class="text-indigo-600">commande</span></h1>
         </div>
+
+        {% for message in app.flashes('warning') %}
+            <div class="mb-6 flex items-center gap-3 rounded-xl bg-rose-50 p-4 border border-rose-100">
+                <svg class="h-5 w-5 text-rose-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                </svg>
+                <p class="text-sm font-bold text-rose-800">{{ message }}</p>
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('success') %}
+            <div class="mb-6 flex items-center gap-3 rounded-xl bg-emerald-50 p-4 border border-emerald-100">
+                <svg class="h-5 w-5 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                <p class="text-sm font-bold text-emerald-800">{{ message }}</p>
+            </div>
+        {% endfor %}
+
+        {% if cart|length > 0 %}
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-8">
+                <h2 class="text-lg font-black uppercase tracking-tight text-slate-900 mb-6">Récapitulatif</h2>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-slate-100">
+                                <th class="text-left py-3 px-2 text-[10px] font-black uppercase tracking-widest text-slate-400">Produit</th>
+                                <th class="text-right py-3 px-2 text-[10px] font-black uppercase tracking-widest text-slate-400">Prix</th>
+                                <th class="text-center py-3 px-2 text-[10px] font-black uppercase tracking-widest text-slate-400">Qté</th>
+                                <th class="text-right py-3 px-2 text-[10px] font-black uppercase tracking-widest text-slate-400">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart %}
+                            <tr class="border-b border-slate-50">
+                                <td class="py-4 px-2 font-bold text-slate-900">{{ item.produit.nom }}</td>
+                                <td class="py-4 px-2 text-right text-slate-600">{{ item.produit.discountedPrice }} DT</td>
+                                <td class="py-4 px-2 text-center font-bold text-slate-900">{{ item.quantity }}</td>
+                                <td class="py-4 px-2 text-right font-black text-slate-900">{{ item.produit.discountedPrice * item.quantity }} DT</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="py-6 px-2 text-right text-sm font-bold text-slate-500 uppercase tracking-tight">Total à payer</td>
+                                <td class="py-6 px-2 text-right text-2xl font-black text-indigo-600">{{ total }} DT</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-100">
+                    <a href="{{ path('app_product_catalog') }}" class="text-sm font-bold text-slate-400 hover:text-indigo-600 transition-colors flex items-center group">
+                        <svg class="h-4 w-4 mr-2 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Continuer mes achats
+                    </a>
+                    <form method="post" action="{{ path('app_cart_checkout_confirm') }}">
+                        <button type="submit" class="flex w-full items-center justify-center rounded-xl bg-slate-900 px-10 py-4 text-sm font-black text-white uppercase tracking-widest hover:bg-slate-800 transition-all shadow-lg">
+                            Confirmer la commande
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center py-24 bg-white rounded-3xl border-2 border-dashed border-slate-200">
+            <div class="inline-flex h-16 w-16 items-center justify-center rounded-full bg-slate-50 text-slate-300 mb-6">
+                <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+            </div>
+            <h2 class="text-xl font-black italic text-slate-900 uppercase mb-2">Ton panier est vide</h2>
+            <p class="text-slate-500 font-medium mb-8">Ajoute des articles avant de passer commande.</p>
+            <a href="{{ path('app_product_catalog') }}" class="inline-flex items-center rounded-xl bg-slate-900 px-8 py-4 text-sm font-black text-white uppercase tracking-widest hover:bg-slate-800 transition-all">
+                Explorer le Catalogue
+            </a>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

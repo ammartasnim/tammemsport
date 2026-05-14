@@ -9,7 +9,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -92,5 +95,25 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkTo(UserCrudController::class, 'Users', 'fas fa-list');
         yield MenuItem::linkTo(CategorieCrudController::class, 'Categories', 'fas fa-list');
         yield MenuItem::linkTo(ProduitCrudController::class, 'Produits', 'fas fa-list');
+        yield MenuItem::linkTo(CommandeCrudController::class, 'Commandes', 'fas fa-shopping-cart');
+        yield MenuItem::section();
+        yield MenuItem::linkToRoute('Déconnexion', 'fas fa-sign-out-alt', 'admin_logout');
+    }
+
+    #[Route('/admin/logout', name: 'admin_logout')]
+    public function adminLogout(): RedirectResponse
+    {
+        $this->container->get('security.token_storage')?->setToken(null);
+        $this->container->get('request_stack')?->getSession()?->invalidate();
+
+        return $this->redirectToRoute('home');
+    }
+
+    public static function getSubscribedServices(): array
+    {
+        return array_merge(parent::getSubscribedServices(), [
+            'security.token_storage' => '?' . TokenStorageInterface::class,
+            'request_stack' => '?' . RequestStack::class,
+        ]);
     }
 }

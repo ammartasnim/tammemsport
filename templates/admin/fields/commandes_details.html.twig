@@ -1,0 +1,20 @@
+<table class="table table-sm mb-0">
+    <thead>
+        <tr>
+            <th>Produit</th>
+            <th>Qté</th>
+            <th>Prix unitaire</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ligne in field.value %}
+        <tr>
+            <td>{{ ligne.produit.nom }}</td>
+            <td>{{ ligne.quantite }}</td>
+            <td>{{ ligne.prix }} DT</td>
+            <td>{{ ligne.prix * ligne.quantite }} DT</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

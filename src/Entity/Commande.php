@@ -19,8 +19,8 @@ class Commande
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTime $date = null;
 
-    #[ORM\Column]
-    private ?int $total = null;
+    #[ORM\Column(type: Types::FLOAT)]
+    private ?float $total = null;
 
     #[ORM\ManyToOne(inversedBy: 'commandes')]
     #[ORM\JoinColumn(nullable: false)]
@@ -29,7 +29,7 @@ class Commande
     /**
      * @var Collection<int, LigneCommande>
      */
-    #[ORM\OneToMany(targetEntity: LigneCommande::class, mappedBy: 'commande')]
+    #[ORM\OneToMany(targetEntity: LigneCommande::class, mappedBy: 'commande', cascade: ['remove'])]
     private Collection $ligneCommandes;
 
     public function __construct()
@@ -54,12 +54,12 @@ class Commande
         return $this;
     }
 
-    public function getTotal(): ?int
+    public function getTotal(): ?float
     {
         return $this->total;
     }
 
-    public function setTotal(int $total): static
+    public function setTotal(float $total): static
     {
         $this->total = $total;
 

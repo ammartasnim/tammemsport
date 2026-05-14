@@ -20,6 +20,10 @@ class PanierRepository extends ServiceEntityRepository
     public function findActiveByUser(User $user): ?Panier
     {
         return $this->createQueryBuilder('p')
+            ->leftJoin('p.items', 'i')
+            ->addSelect('i')
+            ->leftJoin('i.produit', 'pr')
+            ->addSelect('pr')
             ->andWhere('p.user = :user')
             ->andWhere('p.status = :status')
             ->setParameter('user', $user)

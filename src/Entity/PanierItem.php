@@ -18,7 +18,7 @@ class PanierItem
     private ?Panier $panier = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Produit $produit = null;
 
     #[ORM\Column]

@@ -18,11 +18,56 @@ const withAjaxParam = (url) => {
     return `${url}${separator}ajax=1`;
 };
 
+let miniCartRetries = 0;
+let cartRequestInFlight = false;
+
+const miniCartLoading = (loading) => {
+    const el = document.getElementById('miniCart');
+    if (!el) return;
+    el.classList.toggle('pointer-events-none', loading);
+    el.classList.toggle('opacity-50', loading);
+};
+
 const fetchMiniCart = async () => {
     const container = document.getElementById(miniCartContentId);
     if (!container) return;
     const url = withAjaxParam(container.getAttribute('data-mini-cart-url'));
     if (!url) return;
+
+    miniCartLoading(true);
+    const response = await fetch(url, {
+        credentials: 'same-origin',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'text/html',
+        },
+    });
+    miniCartLoading(false);
+    if (!response.ok) return;
+    const html = await response.text();
+    if (!html.trim().startsWith('<')) {
+        if (miniCartRetries < 3) {
+            miniCartRetries++;
+            await fetchMiniCart();
+        }
+        return;
+    }
+    miniCartRetries = 0;
+    container.innerHTML = html;
+    updateCartBadge(container);
+};
+
+const openMiniCart = () => {
+    const offcanvasEl = document.getElementById('cartOffcanvas');
+    if (!offcanvasEl) return;
+    const offcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
+    offcanvas.show();
+};
+
+const replaceCartContent = async (url) => {
+    if (cartRequestInFlight) return;
+    cartRequestInFlight = true;
+    miniCartLoading(true);
 
     const response = await fetch(url, {
         credentials: 'same-origin',
@@ -31,7 +76,15 @@ const fetchMiniCart = async () => {
             'Accept': 'text/html',
         },
     });
+
+    miniCartLoading(false);
+    cartRequestInFlight = false;
+
     if (!response.ok) return;
+
+    const container = document.getElementById(miniCartContentId);
+    if (!container) return;
+
     const html = await response.text();
     if (!html.trim().startsWith('<')) {
         await fetchMiniCart();
@@ -39,13 +92,6 @@ const fetchMiniCart = async () => {
     }
     container.innerHTML = html;
     updateCartBadge(container);
-};
-
-const openMiniCart = () => {
-    const offcanvasEl = document.getElementById('cartOffcanvas');
-    if (!offcanvasEl || !window.bootstrap) return;
-    const offcanvas = window.bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
-    offcanvas.show();
 };
 
 const handleCartAction = async (event) => {
@@ -56,25 +102,7 @@ const handleCartAction = async (event) => {
     const url = withAjaxParam(target.getAttribute('href'));
     if (!url) return;
 
-    const response = await fetch(url, {
-        credentials: 'same-origin',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'Accept': 'text/html',
-        },
-    });
-    if (!response.ok) return;
-
-    const container = document.getElementById(miniCartContentId);
-    if (container) {
-        const html = await response.text();
-        if (!html.trim().startsWith('<')) {
-            await fetchMiniCart();
-        } else {
-            container.innerHTML = html;
-            updateCartBadge(container);
-        }
-    }
+    await replaceCartContent(url);
 };
 
 const handleAddToCart = async (event) => {
@@ -85,25 +113,7 @@ const handleAddToCart = async (event) => {
     const url = withAjaxParam(target.getAttribute('href'));
     if (!url) return;
 
-    const response = await fetch(url, {
-        credentials: 'same-origin',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'Accept': 'text/html',
-        },
-    });
-    if (!response.ok) return;
-
-    const container = document.getElementById(miniCartContentId);
-    if (container) {
-        const html = await response.text();
-        if (!html.trim().startsWith('<')) {
-            await fetchMiniCart();
-        } else {
-            container.innerHTML = html;
-            updateCartBadge(container);
-        }
-    }
+    await replaceCartContent(url);
     openMiniCart();
 };
 

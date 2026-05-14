@@ -1,20 +1,102 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Inscription | Performance Store{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+<div class="min-h-screen flex items-center justify-center bg-white lg:bg-zinc-950">
+    <div class="flex w-full max-w-6xl h-full lg:h-[80vh] overflow-hidden lg:rounded-[3rem] lg:shadow-2xl lg:border lg:border-zinc-800">
 
-    {{ form_errors(registrationForm) }}
+        <div class="hidden lg:flex lg:w-1/2 bg-zinc-900 relative p-16 flex-col justify-between overflow-hidden">
+            <div class="absolute top-0 -left-20 w-96 h-96 bg-indigo-600/20 blur-[100px] rounded-full"></div>
+            <div class="absolute bottom-0 -right-20 w-96 h-96 bg-blue-600/10 blur-[100px] rounded-full"></div>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.nom) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+            <div class="relative z-10">
+                <h2 class="text-6xl font-black italic tracking-tighter text-white uppercase leading-none">
+                    REJOINS <br> L'<span class="text-indigo-500">ÉLITE.</span>
+                </h2>
+                <p class="mt-6 text-zinc-400 font-medium max-w-xs uppercase text-xs tracking-widest leading-loose">
+                    Crée ton compte et accède au meilleur équipement sportif.
+                </p>
+            </div>
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+            <div class="relative z-10 mt-auto">
+                <p class="text-xs font-black text-zinc-500 uppercase tracking-widest">Performance Store &copy; 2026</p>
+            </div>
+        </div>
+
+        <div class="w-full lg:w-1/2 bg-white p-8 sm:p-16 flex flex-col justify-center">
+            <div class="max-w-md w-full mx-auto">
+                <div class="mb-10">
+                    <h1 class="text-3xl font-black italic tracking-tighter text-zinc-900 uppercase">Créer ton <span class="text-indigo-600">compte</span></h1>
+                    <p class="text-zinc-500 text-sm font-medium mt-2">Prêt à passer au niveau supérieur ?</p>
+                </div>
+
+                {{ form_errors(registrationForm) }}
+
+                {{ form_start(registrationForm, {attr: {class: 'space-y-6'}}) }}
+
+                    <div class="space-y-2">
+                        <label for="{{ registrationForm.nom.vars.id }}" class="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Nom complet</label>
+                        {{ form_widget(registrationForm.nom, {
+                            attr: {
+                                class: 'block w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-3.5 text-zinc-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-zinc-400 transition-all',
+                                placeholder: 'ex: Ahmed Ben Ali'
+                            }
+                        }) }}
+                        {{ form_errors(registrationForm.nom) }}
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="{{ registrationForm.email.vars.id }}" class="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Email</label>
+                        {{ form_widget(registrationForm.email, {
+                            attr: {
+                                class: 'block w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-3.5 text-zinc-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder:text-zinc-400 transition-all',
+                                placeholder: 'exemple@athlete.tn'
+                            }
+                        }) }}
+                        {{ form_errors(registrationForm.email) }}
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="{{ registrationForm.plainPassword.vars.id }}" class="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Mot de passe</label>
+                        {{ form_widget(registrationForm.plainPassword, {
+                            attr: {
+                                class: 'block w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-3.5 text-zinc-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition-all',
+                                placeholder: '••••••••'
+                            }
+                        }) }}
+                        {{ form_errors(registrationForm.plainPassword) }}
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        {{ form_widget(registrationForm.agreeTerms, {
+                            attr: {
+                                class: 'h-4 w-4 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer'
+                            }
+                        }) }}
+                        <label for="{{ registrationForm.agreeTerms.vars.id }}" class="text-xs font-bold text-zinc-500 uppercase tracking-tighter cursor-pointer select-none hover:text-zinc-900 transition-colors">
+                            J'accepte les conditions d'utilisation
+                        </label>
+                    </div>
+                    {{ form_errors(registrationForm.agreeTerms) }}
+
+                    <button type="submit" class="flex w-full items-center justify-center rounded-xl bg-zinc-950 px-8 py-4 text-sm font-black text-white uppercase tracking-[0.2em] shadow-xl hover:bg-zinc-800 focus:ring-2 focus:ring-zinc-950 focus:ring-offset-2 transition-all group">
+                        Créer mon compte
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-3 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                    </button>
+
+                {{ form_end(registrationForm) }}
+
+                <div class="mt-12 pt-8 border-t border-zinc-100 text-center">
+                    <p class="text-xs font-bold text-zinc-400 uppercase tracking-tighter">
+                        Déjà membre ?
+                        <a href="{{ path('app_login') }}" class="text-indigo-600 hover:text-indigo-700 font-black">Se connecter</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

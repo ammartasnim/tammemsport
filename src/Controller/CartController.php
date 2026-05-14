@@ -45,7 +45,7 @@ final class CartController extends AbstractController
                     'produit' => $produit,
                     'quantity' => $quantity,
                 ];
-                $total += $produit->getPrix() * $quantity;
+                $total += $produit->getDiscountedPrice() * $quantity;
             }
         }
 
@@ -327,13 +327,13 @@ final class CartController extends AbstractController
                 $ligne = new LigneCommande();
                 $ligne->setProduit($produit);
                 $ligne->setQuantite($quantity);
-                $ligne->setPrix($produit->getPrix());
+                $ligne->setPrix($produit->getDiscountedPrice());
                 $ligne->setCommande($commande);
                 $newStock = $produit->getStock() - $quantity;
                 $produit->setStock($newStock);
                 $em->persist($produit);
 
-                $total += ($produit->getPrix() * $quantity);
+                $total += ($produit->getDiscountedPrice() * $quantity);
                 $em->persist($ligne);
             }
         }
@@ -384,7 +384,7 @@ final class CartController extends AbstractController
             $produit = $item->getProduit();
             $quantity = $item->getQuantite();
             if ($produit) {
-                $total += $produit->getPrix() * $quantity;
+                $total += $produit->getDiscountedPrice() * $quantity;
             }
         }
 

@@ -1,57 +1,118 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ produit.nom }}{% endblock %}
+{% block title %}{{ produit.nom }} | Performance Store{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
+<div class="bg-white min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Breadcrumb / Back Navigation -->
+        <nav class="flex mb-8" aria-label="Breadcrumb">
+            <a href="{{ path('app_product_catalog') }}" class="group flex items-center text-sm font-bold text-slate-500 hover:text-indigo-600 transition-colors uppercase tracking-widest">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+                Retour au Catalogue
+            </a>
+        </nav>
 
-    <a href="{{ path('app_product_catalog') }}" class="btn btn-outline-secondary mb-4">
-        ← Retour au catalogue
-    </a>
-
-    <div class="row">
-        {# Image #}
-        <div class="col-md-5">
-            {% if produit.image %}
-                <img src="{{ asset('uploads/images/' ~ produit.image) }}" class="img-fluid rounded" alt="{{ produit.nom }}" style="height: 150px; object-fit: cover;">
-            {% else %}
-                <div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="height: 350px;">
-                    <span class="text-white fs-4">Pas d'image</span>
+        <div class="lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start">
+            
+            <!-- Left: Product Image Gallery -->
+            <div class="lg:col-span-7">
+                <div class="aspect-square w-full overflow-hidden rounded-3xl bg-slate-100 border border-slate-200">
+                    {% if produit.image %}
+                        <img src="{{ asset('uploads/images/' ~ produit.image) }}" 
+                             alt="{{ produit.nom }}" 
+                             class="h-full w-full object-cover object-center transition-opacity duration-300">
+                    {% else %}
+                        <div class="flex h-full w-full flex-col items-center justify-center text-slate-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span class="text-sm font-bold uppercase tracking-tighter italic">No Visual Available</span>
+                        </div>
+                    {% endif %}
                 </div>
-            {% endif %}
-        </div>
-
-        {# Details #}
-        <div class="col-md-7">
-            <h1>{{ produit.nom }}</h1>
-            <p class="text-muted">Catégorie : {{ produit.categorie.libelle ?? 'Sans catégorie' }}</p>
-
-            <hr>
-
-            <p>{{ produit.description|raw }}</p>
-
-            <div class="d-flex align-items-center gap-3 my-3">
-                <span class="fs-3 fw-bold text-success">{{ produit.prix }} DT</span>
-                <span class="badge fs-6 {{ produit.stock > 0 ? 'bg-success' : 'bg-danger' }}">
-                    {{ produit.stock > 0 ? 'En stock (' ~ produit.stock ~ ')' : 'Rupture de stock' }}
-                </span>
             </div>
 
-            {% if produit.stock > 0 %}
-                {% if is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('app_cart_add', {id: produit.id}) }}" class="btn btn-success" data-add-to-cart>
-                        🛒 Ajouter au panier
-                    </a>
-                {% else %}
-                    <a href="{{ path('app_login') }}" class="btn btn-outline-success btn-lg">
-                        Connectez-vous pour acheter
-                    </a>
-                {% endif %}
-            {% else %}
-                <button class="btn btn-secondary btn-lg" disabled>Indisponible</button>
-            {% endif %}
+            <!-- Right: Product Information -->
+            <div class="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0 lg:col-span-5">
+                <div class="flex flex-col">
+                    <!-- Badge and Category -->
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-black uppercase tracking-[0.2em] text-indigo-600">
+                            {{ produit.categorie.libelle ?? 'Pro Performance' }}
+                        </span>
+                        <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-bold {{ produit.stock > 0 ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/20' : 'bg-rose-50 text-rose-700 ring-1 ring-rose-600/20' }}">
+                            {{ produit.stock > 0 ? 'En Stock' : 'Épuisé' }}
+                        </span>
+                    </div>
+
+                    <h1 class="mt-4 text-4xl font-black italic tracking-tighter text-slate-900 uppercase sm:text-5xl">
+                        {{ produit.nom }}
+                    </h1>
+
+                    <div class="mt-6 flex items-baseline gap-4">
+                        <h2 class="sr-only">Product information</h2>
+                        {% if produit.isPromo and produit.promoDiscount %}
+                            <p class="text-4xl font-black text-indigo-600">{{ produit.discountedPrice }} <span class="text-lg">DT</span></p>
+                            <p class="text-lg text-slate-400 line-through">{{ produit.prix }} DT</p>
+                        {% else %}
+                            <p class="text-4xl font-black text-slate-900">{{ produit.prix }} <span class="text-lg">DT</span></p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Description Section -->
+                    <div class="mt-10">
+                        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-4">Description</h3>
+                        <div class="mt-4 prose prose-sm text-slate-600 max-w-none leading-relaxed">
+                            {{ produit.description|raw }}
+                        </div>
+                    </div>
+
+                    <!-- CTA Section -->
+                    <div class="mt-10 flex flex-col gap-4">
+                        {% if produit.stock > 0 %}
+                            {% if is_granted('ROLE_CLIENT') or is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('app_cart_add', {id: produit.id}) }}" 
+                                   class="flex w-full items-center justify-center rounded-xl bg-slate-900 px-8 py-4 text-base font-bold text-white shadow-xl hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all uppercase tracking-widest"
+                                   data-add-to-cart>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                    </svg>
+                                    Ajouter au Panier
+                                </a>
+                            {% else %}
+                                <a href="{{ path('app_login') }}" 
+                                   class="flex w-full items-center justify-center rounded-xl border-2 border-indigo-600 px-8 py-4 text-base font-bold text-indigo-600 hover:bg-indigo-50 transition-all uppercase tracking-widest">
+                                    Se connecter pour commander
+                                </a>
+                            {% endif %}
+                        {% else %}
+                            <button disabled class="flex w-full items-center justify-center rounded-xl bg-slate-200 px-8 py-4 text-base font-bold text-slate-400 cursor-not-allowed uppercase tracking-widest">
+                                Indisponible pour le moment
+                            </button>
+                        {% endif %}
+                    </div>
+
+                    <!-- Trust Points -->
+                    <div class="mt-12 grid grid-cols-1 gap-6 border-t border-slate-100 pt-10">
+                        <div class="flex items-center gap-4">
+                            <div class="flex-shrink-0 bg-slate-50 p-3 rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-900 uppercase tracking-tighter">Garantie Performance</h4>
+                                <p class="text-[11px] text-slate-500">Satisfait ou remboursé sous 14 jours.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
 </div>
 {% endblock %}

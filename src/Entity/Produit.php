@@ -45,7 +45,7 @@ class Produit
     /**
      * @var Collection<int, LigneCommande>
      */
-    #[ORM\OneToMany(targetEntity: LigneCommande::class, mappedBy: 'produit')]
+    #[ORM\OneToMany(targetEntity: LigneCommande::class, mappedBy: 'produit', cascade: ['remove'])]
     private Collection $ligneCommandes;
 
     public function __construct()
@@ -140,6 +140,14 @@ class Produit
         $this->promoDiscount = $promoDiscount;
 
         return $this;
+    }
+
+    public function getDiscountedPrice(): float
+    {
+        if ($this->isPromo && $this->promoDiscount !== null && $this->prix !== null) {
+            return round($this->prix * (1 - $this->promoDiscount / 100), 3);
+        }
+        return $this->prix ?? 0;
     }
 
     #[Assert\Callback]

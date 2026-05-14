@@ -79,4 +79,10 @@ class LigneCommande
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        $nom = $this->produit?->getNom() ?? 'Produit #' . $this->produit?->getId();
+        return sprintf('%s × %d (%s DT)', $nom, $this->quantite, $this->prix);
+    }
 }

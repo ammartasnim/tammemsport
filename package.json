@@ -1,0 +1,29 @@
+{
+  "name": "projetsymph",
+  "version": "1.0.0",
+  "description": "",
+  "main": "tailwind.config.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "build:css": "tailwindcss -i ./assets/styles/input.css -o ./assets/styles/app.css --minify",
+    "watch:css": "tailwindcss -i ./assets/styles/input.css -o ./assets/styles/app.css --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ammartasnim/tammemsport.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ammartasnim/tammemsport/issues"
+  },
+  "homepage": "https://github.com/ammartasnim/tammemsport#readme",
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
+  }
+}

@@ -27,7 +27,9 @@ class ProduitRepository extends ServiceEntityRepository
 
     public function findByFilters(?string $term, ?int $categoryId): array
     {
-        $qb = $this->createQueryBuilder('p');
+        $qb = $this->createQueryBuilder('p')
+            ->leftJoin('p.categorie', 'c')
+            ->addSelect('c');
 
         if ($term) {
             $qb->andWhere('p.nom LIKE :term')
@@ -45,6 +47,8 @@ class ProduitRepository extends ServiceEntityRepository
     public function findPromos(int $limit = 6): array
     {
         return $this->createQueryBuilder('p')
+            ->leftJoin('p.categorie', 'c')
+            ->addSelect('c')
             ->andWhere('p.isPromo = :isPromo')
             ->setParameter('isPromo', true)
             ->orderBy('p.id', 'DESC')
@@ -56,6 +60,8 @@ class ProduitRepository extends ServiceEntityRepository
     public function findLatest(int $limit = 6): array
     {
         return $this->createQueryBuilder('p')
+            ->leftJoin('p.categorie', 'c')
+            ->addSelect('c')
             ->orderBy('p.id', 'DESC')
             ->setMaxResults($limit)
             ->getQuery()
